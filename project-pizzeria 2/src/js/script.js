@@ -54,15 +54,14 @@
 
   //Stworzenie klasy
   class Product{
-    constructor(id, data,){
+    constructor(id, data){
       const thisProduct = this;
 
       thisProduct.id = id;
       thisProduct.data = data;
       
       thisProduct.renderInMenu();
-      
-      constructor (initAccordion);
+      thisProduct.initAccordion();
 
       
 
@@ -90,9 +89,14 @@ menuContainer.appendChild(thisProduct.element);
       const thisProduct = this;
   
       /* find the clickable trigger (the element that should react to clicking) */
-      const clickableTrigger = clickable;
+      
+      const clickableTrigger = document.querySelector('.product__header');
   
       /* START: add event listener to clickable trigger on event click */
+     
+     
+
+
       clickableTrigger.addEventListener('click', function(event) {
         /* prevent default action for event */
         event.preventDefault();
@@ -102,12 +106,20 @@ menuContainer.appendChild(thisProduct.element);
         console.log('active products' + menuProductsActive)
   
         /* if there is active product and it's not thisProduct.element, remove class active from it */
-  
-        /* toggle active class on thisProduct.element */
+        const activeProducts = document.querySelectorAll('.header__wrapper');
+
+        for (let activeProduct of activeProducts) {
+          activeProduct.classList.remove('active');
+        /* toggle active class on thisProduct.element *///////////////////
+        
+
+        document.querySelector('.product__header')
+        thisProduct.element.toggle('.active');
+          
+       
+        
       });
-  
     }
-  
   }
 
 //Stworzenie instancji
