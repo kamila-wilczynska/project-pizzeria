@@ -24,6 +24,9 @@
         "watch:browsersync": "browser-sync start --server dist --files \"dist/**/*\"",
         "watch:sassprefixer": "onchange \"src/sass/**/*.scss\" -- npm run build-dev",
         "watch:copy": "onchange -e \"**/sass/**/*\" -e \"**/.gitkeep\" \"src/**/*\" -- copyfiles -a -u 1 {{changed}} dist"
+
+        
+
     },
     "keywords": [],
     "author": "",
@@ -47,4 +50,6 @@
         "stylelint-config-standard-scss": "^5.0.0",
         "stylelint-scss": "^4.3.0"
     }
+
+    
 }
