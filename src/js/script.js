@@ -101,7 +101,7 @@
 
       /* find the clickable trigger (the element that should react to clicking) */
 
-      const clickableTrigger = document.querySelector(select.menuProduct.clickable);
+      const clickableTrigger = document.querySelectorAll(select.menuProduct.clickable);
       
       
       /* START: add event listener to clickable trigger on event click */
@@ -120,12 +120,13 @@
 
         for (let activeProduct of activeProducts) {
           activeProduct.classList.remove('.active');
+          
           /* toggle active class on thisProduct.element *///////////////////
         }
 
         document.querySelector(select.menuProduct.clickable);
-        thisProduct.element.toggle('.active');
-
+        clickableTrigger.toggle('.active');
+        
       });
     }
   }
