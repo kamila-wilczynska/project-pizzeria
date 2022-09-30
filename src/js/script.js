@@ -53,44 +53,42 @@
   };
 
   //Stworzenie klasy
-  class Product{
-    constructor(id, data){
+  class Product {
+    constructor(id, data) {
       const thisProduct = this;
 
       thisProduct.id = id;
       thisProduct.data = data;
-      
+
       thisProduct.renderInMenu();
 
       thisProduct.initAccordion();
 
       thisProduct.getElements();
-      
-
-      
 
       console.log('new Product:', thisProduct);
     }
 
     //alrorytm HTML
-    renderInMenu(){
+    renderInMenu() {
       const thisProduct = this;
+
+
+      //generate HTML
+      const generatedHTML = templates.menuProduct(thisProduct.data);
+      //create element using createElementFromHTML
+      thisProduct.element = utils.createDOMFromHTML(generatedHTML);
       
-      
-//generate HTML
-const generatedHTML = templates.menuProduct(thisProduct.data);
-//create element using createElementFromHTML
-thisProduct.element = utils.createDOMFromHTML(generatedHTML);
-//find menu container
-const menuContainer =document.querySelector(select.containerOf.menu);
-//add element to menu
-menuContainer.appendChild(thisProduct.element);
+      //find menu container
+      const menuContainer = document.querySelector(select.containerOf.menu);
+      //add element to menu
+      menuContainer.appendChild(thisProduct.element);
 
     }
 
-    getElements(){
+    getElements() {
       const thisProduct = this;
-    
+
       thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
       thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
@@ -98,62 +96,60 @@ menuContainer.appendChild(thisProduct.element);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
     }
 
-    initAccordion(){
+    initAccordion() {
       const thisProduct = this;
-  
+
       /* find the clickable trigger (the element that should react to clicking) */
+
+      const clickableTrigger = document.querySelector(select.menuProduct.clickable);
       
-      const clickableTrigger = document.querySelector('.product__header');
-  
+      
       /* START: add event listener to clickable trigger on event click */
-     
-     
 
-
-      clickableTrigger.addEventListener('click', function(event) {
+      
+      clickableTrigger.addEventListener('click', function (event) {
+        console.log('clicked');
         /* prevent default action for event */
         event.preventDefault();
-  
+
         /* find active product (product that has active class) */
-        const menuProductsActive = document.querySelector(menuProductsActive);
-        console.log('active products' + menuProductsActive)
-  
+        const activeProduct = document.querySelectorAll(select.all.menuProductsActive);
+        console.log('active products' + activeProduct);
+
         /* if there is active product and it's not thisProduct.element, remove class active from it */
-        const activeProducts = document.querySelectorAll('.header__wrapper');
+        const activeProducts = document.querySelectorAll(select.classNames.menuProducts);
 
         for (let activeProduct of activeProducts) {
-          activeProduct.classList.remove('active');
-        /* toggle active class on thisProduct.element *///////////////////
-        
+          activeProduct.classList.remove('.active');
+          /* toggle active class on thisProduct.element *///////////////////
+        }
 
-        document.querySelector('.product__header')
+        document.querySelector(select.menuProduct.clickable);
         thisProduct.element.toggle('.active');
-          
-       
-        
+
       });
     }
   }
 
-//Stworzenie instancji
-  
+  //Stworzenie instancji
 
-const app = {
-    initMenu: function(){
+
+  const app = {
+    initMenu: function () {
       const thisApp = this;
-      console.log('thisApp.data',thisApp.data);
-      for(let productData in thisApp.data.products){
-        new Product (productData, thisApp.data.products[productData]);
-    }
-  },
+      console.log('thisApp.data', thisApp.data);
+      for (let productData in thisApp.data.products) {
+        new Product(productData, thisApp.data.products[productData]);
+      }
+    },
 
 
-    initData: function(){
+    initData: function () {
       const thisApp = this;
       thisApp.data = dataSource;
     },
-  
-    init: function(){
+
+    init: function () {
       const thisApp = this;
       console.log('*** App starting ***');
       console.log('thisApp:', thisApp);
@@ -166,7 +162,7 @@ const app = {
     },
   };
 
- 
+
 
   app.init();
 }
