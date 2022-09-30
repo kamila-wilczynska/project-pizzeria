@@ -108,7 +108,6 @@
 
       
       clickableTrigger.addEventListener('click', function (event) {
-        console.log('clicked');
         /* prevent default action for event */
         event.preventDefault();
 
@@ -117,7 +116,7 @@
         console.log('active products' + activeProduct);
 
         /* if there is active product and it's not thisProduct.element, remove class active from it */
-        const activeProducts = document.querySelectorAll(select.classNames.menuProducts);
+        const activeProducts = document.querySelector(classNames.menuProduct);
 
         for (let activeProduct of activeProducts) {
           activeProduct.classList.remove('.active');
