@@ -61,10 +61,11 @@
       thisProduct.data = data;
 
       thisProduct.renderInMenu();
-
-      thisProduct.initAccordion();
-
       thisProduct.getElements();
+      thisProduct.initAccordion();
+      thisProduct.initOrderForm();
+      thisProduct.processOrder();
+      
 
       console.log('new Product:', thisProduct);
     }
@@ -90,7 +91,7 @@
       const thisProduct = this;
 
       thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
-      console.log(thisProduct.accordionTrigger);
+      //console.log(thisProduct.accordionTrigger);
       thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
@@ -133,9 +134,19 @@
     }
   }
 
-  //Stworzenie instancji
+
+  initOrderForm(){
+    const thisProduct = this;
+    console.log(processOrder + 'method executed');
+  }
+  
+
+  processOrder(){
+    const thisProduct = this;
+  }
 
 
+//Stworzenie instancji
   const app = {
     initMenu: function () {
       const thisApp = this;
