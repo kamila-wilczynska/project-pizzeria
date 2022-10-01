@@ -90,6 +90,7 @@
       const thisProduct = this;
 
       thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
+      console.log(thisProduct.accordionTrigger);
       thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form);
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
@@ -101,8 +102,8 @@
 
       /* find the clickable trigger (the element that should react to clicking) */
 
-      const clickableTrigger = document.querySelector(select.menuProduct.clickable);
-      
+     
+      const clickableTrigger = thisProduct.element.querySelector(select.menuProduct.clickable);
       
       /* START: add event listener to clickable trigger on event click */
 
@@ -113,19 +114,20 @@
 
         /* find active product (product that has active class) */
         const activeProduct = document.querySelector(select.all.menuProductsActive);
+        
         console.log('active products' + activeProduct);
 
         /* if there is active product and it's not thisProduct.element, remove class active from it */
        
 
         if(activeProduct != 0 && activeProduct != thisProduct.elememnt){
-          activeProduct.classList.remove(classNames.menuProduct.wrapperActive);
+          activeProduct.classList.remove('active');
         } 
         /* toggle active class on thisProduct.element *///////////////////
         
 
-        document.querySelector(classNames.menuProduct.wrapperActive);
-        thisProduct.element.classList.toggle(classNames.menuProduct.wrapperActive);
+        
+        thisProduct.element.classList.toggle('active');
 
       });
     }
