@@ -64,7 +64,6 @@
       thisProduct.getElements();
       thisProduct.initAccordion();
       thisProduct.initOrderForm();
-
       thisProduct.processOrder();
 
 
@@ -97,6 +96,8 @@
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.querySelector(select.menuProduct.imageWrapper);
+      console.log(thisProduct.imageWrapper);
     }
 
     initAccordion() {
@@ -177,56 +178,73 @@
           const option = param.options[optionId];
           console.log(optionId, option);
 
+          const optionImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId);
+          console.log(optionImage);
+
           if (formData[paramId] && formData[paramId].includes(optionId)) {
             // check if the option is not default
-            if (!option.default) {
-              // add option price to price variable
+            const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
+            // check if there is param with a name of paramId in formData and if it includes optionId
+            if (optionSelected) {
+              if (!option.default) {
+                // add option price to price variable
 
-              price += option.price;
+                price += option.price;
+              }
+            } // check if the option is default
+            else if (option.default) {
+              // reduce price variable
+              // console.log('opt2');
+              price -= option.price;
             }
-          } // check if the option is default
-          else if (option.default) {
-            // reduce price variable
-            // console.log('opt2');
-            price -= option.price;
           }
+
+
+
+            if (optionImage) {
+              if (optionSelected) {
+                optionImage.classList.add(classNames.menuProduct.imageVisible);
+              } else {
+                optionImage.classList.remove(classNames.menuProduct.imageVisible);
+              
+
+            }
+          }
+
+          // update calculated price in the HTML
+          thisProduct.priceElem.innerHTML = price;
         }
-      }
 
-      // update calculated price in the HTML
-      thisProduct.priceElem.innerHTML = price;
+      }
+      const app = {
+        initMenu: function () {
+          const thisApp = this;
+          console.log('thisApp.data', thisApp.data);
+          for (let productData in thisApp.data.products) {
+            new Product(productData, thisApp.data.products[productData]);
+          }
+        },
+
+
+        initData: function () {
+          const thisApp = this;
+          thisApp.data = dataSource;
+        },
+
+        init: function () {
+          const thisApp = this;
+          console.log('*** App starting ***');
+          console.log('thisApp:', thisApp);
+          console.log('classNames:', classNames);
+          console.log('settings:', settings);
+          console.log('templates:', templates);
+
+          thisApp.initData();
+          thisApp.initMenu();
+        },
+      };
+
+
+
+      app.init();
     }
-
-  }
-  const app = {
-    initMenu: function () {
-      const thisApp = this;
-      console.log('thisApp.data', thisApp.data);
-      for (let productData in thisApp.data.products) {
-        new Product(productData, thisApp.data.products[productData]);
-      }
-    },
-
-
-    initData: function () {
-      const thisApp = this;
-      thisApp.data = dataSource;
-    },
-
-    init: function () {
-      const thisApp = this;
-      console.log('*** App starting ***');
-      console.log('thisApp:', thisApp);
-      console.log('classNames:', classNames);
-      console.log('settings:', settings);
-      console.log('templates:', templates);
-
-      thisApp.initData();
-      thisApp.initMenu();
-    },
-  };
-
-
-
-  app.init();
-}
