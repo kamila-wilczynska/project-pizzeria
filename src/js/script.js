@@ -51,7 +51,7 @@
     },
     // CODE ADDED END
   };
-  
+
   const classNames = {
     menuProduct: {
       wrapperActive: 'active',
@@ -63,7 +63,7 @@
     },
     // CODE ADDED END
   };
-  
+
   const settings = {
     amountWidget: {
       defaultValue: 1,
@@ -76,7 +76,7 @@
     },
     // CODE ADDED END
   };
-  
+
   const templates = {
     menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
     // CODE ADDED START
@@ -246,9 +246,10 @@
       }
 
       // update calculated price in the HTML
-      thisProduct.priceElem.innerHTML = price;
+      thisProduct.priceSingle = price;
+      //console.log(thisProduct.priceSingle);
       price *= thisProduct.amountWidget.value;
-      
+
       thisProduct.priceElem.innerHTML = price;
     }
 
@@ -257,20 +258,69 @@
 
       thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
 
-      thisProduct.amountWidgetElem.addEventListener('updated', function(){
+      thisProduct.amountWidgetElem.addEventListener('updated', function () {
         thisProduct.processOrder();
 
       });
+    }
+
+    addToCart() {
+      const thisProduct = this;
+
+      app.cart.add(thisProduct.prepareCartProduct());
+
+    }
+    prepareCartProduct() {
+      const thisProduct = this;
+
+      const productSummary = {
+        priceSingle: thisProduct.priceSingle,
+        price: thisProduct.priceSingle * thisProduct.amountWidget.value,
+        params: thisProduct.prepareCartProductParams(),
+
+      };
+      return productSummary;
+    }
+    prepareCartProductParams() {
+      const thisProduct = this;
+
+      const formData = utils.serializeFormToObject(thisProduct.form);
+      const params = {};
+
+      // for every category (param)
+      for (let paramId in thisProduct.data.params) {
+        const param = thisProduct.data.params[paramId];
+
+        // create category param in params const eg. params = { ingredients: { name: 'Ingredients', options: {}}}
+        params[paramId] = {
+          label: param.label,
+          options: {},
+        };
+
+        // for every option in this category
+        for (let optionId in param.options) {
+          // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
+          const option = param.options[optionId];
+          // selected element
+          const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
+          if (optionSelected) {
+            params[paramId].options[optionId] = option.label;
+          }
+        }
+      }
+      return params;
+
+
     }
   }
 
   class AmountWidget {
     constructor(element) {
       const thisWidget = this;
-      
+
 
       thisWidget.getElements(element);
-      
+
       thisWidget.setValue(thisWidget.input.value || settings.amountWidget.defaultValue);
       thisWidget.initActions();
 
@@ -285,7 +335,7 @@
       thisWidget.input = thisWidget.element.querySelector(select.widgets.amount.input);
       thisWidget.linkDecrease = thisWidget.element.querySelector(select.widgets.amount.linkDecrease);
       thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
-      
+
     }
 
     setValue(value) {
@@ -295,33 +345,33 @@
 
       //Add validation
 
-      if ((thisWidget.value !== newValue && !isNaN(newValue)) && (newValue <= 10) && (newValue >= 0)){
+      if ((thisWidget.value !== newValue && !isNaN(newValue)) && (newValue <= 10) && (newValue >= 0)) {
         thisWidget.value = newValue;
       }
 
-      
+
       thisWidget.input.value = thisWidget.value;
       //console.log(thisWidget.value);
       thisWidget.announce();
 
-      
+
     }
-    initActions(){
+    initActions() {
       const thisWidget = this;
-      thisWidget.input.addEventListener('change', function(){
+      thisWidget.input.addEventListener('change', function () {
         thisWidget.setValue(thisWidget.input.value);
       });
-      thisWidget.linkDecrease.addEventListener('click', function(event){
+      thisWidget.linkDecrease.addEventListener('click', function (event) {
         event.preventDefault();
         thisWidget.setValue(thisWidget.value - 1);
       });
-      thisWidget.linkIncrease.addEventListener('click', function(event){
+      thisWidget.linkIncrease.addEventListener('click', function (event) {
         event.preventDefault();
         thisWidget.setValue(thisWidget.value + 1);
       });
     }
 
-    announce(){
+    announce() {
       const thisWidget = this;
 
       const event = new Event('updated');
@@ -330,7 +380,7 @@
   }
 
   class Cart {
-    constructor(element){
+    constructor(element) {
       const thisCart = this;
 
       thisCart.products = [];
@@ -341,10 +391,11 @@
 
     getElements(element) {
       const thisCart = this;
-      
-      thisCart.dom ={};
+
+      thisCart.dom = {};
       thisCart.dom.wrapper = element;
       thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
+      thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
     }
 
     initActions() {
@@ -355,6 +406,20 @@
 
       });
     }
+
+    add(menuProduct) {
+      const thisCart = this;
+      // console.log('adding product', menuProduct)
+      /* Generate HTML based on template */
+      const generatedHTML = templates.cartProduct(menuProduct);
+      /* create element using utils.createElementFromHTML */
+      const generatedDOM = utils.createDOMFromHTML(generatedHTML);
+      /* add element to menu */
+      thisCart.dom.productList.appendChild(generatedDOM);
+      /* Push data bout products to array */
+     
+    }
+
   }
 
 
@@ -373,11 +438,11 @@
       const thisApp = this;
       thisApp.data = dataSource;
     },
-    initCart: function(){
-      const thisApp =this;
+    initCart: function () {
+      const thisApp = this;
       const cartElem = document.querySelector(select.containerOf.cart);
       thisApp.cart = new Cart(cartElem);
-      console.log('Cart Element',cartElem );
+      console.log('Cart Element', cartElem);
     },
 
     init: function () {
@@ -392,7 +457,7 @@
       thisApp.initMenu();
       thisApp.initCart();
 
-    }, 
+    },
   };
 
 
