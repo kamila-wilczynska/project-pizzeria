@@ -2,8 +2,9 @@
 
 
 import { settings, select, classNames } from './settings.js';
-import Product from './components/product.js';
+import Product from './components/products.js';
 import Cart from './components/cart.js';
+import Booking from './components/Booking.js';
 
 
 
@@ -12,51 +13,50 @@ import Cart from './components/cart.js';
 const app = {
   initPages: function () {
     const thisApp = this;
-
+	
     thisApp.pages = document.querySelector(select.containerOf.pages).children;
     thisApp.navLinks = document.querySelectorAll(select.nav.links);
-
-    thisApp.activatePage(thisApp.pages[0].id);
-
-    for(let link of thisApp.navLinks){
-      link.addEventListener('click', function(event){
+    
+	
+    const idFromHash = window.location.hash.replace('#/', '');
+	
+    let pageMatchingHash = thisApp.pages[0].id;
+	
+    for (let page of thisApp.pages) {
+      if (page.id == idFromHash) {
+        pageMatchingHash = page.id;
+        break;
+      }
+    }
+    //Listenery do podstron
+    thisApp.activatePage(pageMatchingHash);
+	
+    for (let link of thisApp.navLinks) {
+      link.addEventListener('click', function (event) {
         const clickedElement = this;
         event.preventDefault();
-
-        /*get  page if href attribute */
-
+	
         const id = clickedElement.getAttribute('href').replace('#', '');
-
-        /*run thisApp.activatePage */
+	
         thisApp.activatePage(id);
+	
+        window.location.hash = '#/' + id;
       });
     }
-
-
-    
   },
-
+	
   activatePage: function (pageId) {
     const thisApp = this;
-
-    /*add class "active to matching pages, remove from non-matching" */
+    // add class'active' to matching PAGES, remove from non-matching
     for (let page of thisApp.pages) {
-      page.classList.toggle(
-        classNames.pages.active,
-        page.id == pageId
-      );
+      page.classList.toggle(classNames.pages.active, page.id == pageId);
     }
-    /*add class "active to matching links, remove from non-links" */
+    // add class'active' to matching LINKS, remove from non-matching
     for (let link of thisApp.navLinks) {
-      link.classList.toggle(
-        classNames.nav.active,
-        link.getAttribute('href') == '#' + pageId
-      );
-  
+      link.classList.toggle(classNames.nav.active, link.getAttribute('href') == '#' + pageId);
     }
-
   },
-
+  
 
   initMenu: function () {
     const thisApp = this;
@@ -70,7 +70,7 @@ const app = {
   initData: function () {
     const thisApp = this;
     thisApp.data = {};
-    const url = settings.db.url + '/' + settings.db.product;
+    const url = settings.db.url + '/' + settings.db.products;
     
     //connect with url
     fetch(url)
@@ -104,6 +104,14 @@ const app = {
     });
   },
 
+  initBooking: function(){
+    const thisApp = this;
+    
+    const reservationWidget = document.guerySelector(select.containerOf.booking);
+    thisApp.booking = new Booking(reservationWidget);
+
+  },
+
   init: function () {
     const thisApp = this;
     // console.log('*** App starting ***');
@@ -117,6 +125,7 @@ const app = {
     thisApp.initData();
 
     thisApp.initCart();
+    thisApp.initBooking();
 
   },
 };
