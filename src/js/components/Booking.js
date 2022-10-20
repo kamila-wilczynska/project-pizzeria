@@ -52,11 +52,7 @@ class Booking {
         table.classList.toggle(classNames.booking.active);
       });
     }
-    const submitButton = document.querySelector(select.booking.submitButton);
-    submitButton.addEventListener('click', function (event) {
-      event.preventDefault();
-      thisBooking.sendBooking();
-    });
+
   }
 }
 	
