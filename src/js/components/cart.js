@@ -1,123 +1,126 @@
-
-
-
-
-import {select, classNames, settings, templates} from '../settings.js';
-import CartProduct from '../components/cartProduct.js';
+import {settings, select, templates, classNames} from '../settings.js';
 import utils from '../utils.js';
+import CartProduct from './cartProduct.js';
 
-
-
-
-class Cart {
-  constructor(element) {
+class Cart{
+  constructor(element){
     const thisCart = this;
 
     thisCart.products = [];
+
     thisCart.getElements(element);
     thisCart.initActions();
 
-    //console.log('new Cart', thisCart);
   }
 
-  getElements(element) {
+  getElements(element){
     const thisCart = this;
-    //Referencje do elementów
+
     thisCart.dom = {};
+
     thisCart.dom.wrapper = element;
     thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
-    thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
-    thisCart.dom.deliveryFee = thisCart.dom.wrapper.querySelector(select.cart.deliveryFee);
+    thisCart.dom.productList = document.querySelector(select.cart.productList);
+    thisCart.dom.deliveryFee = element.querySelector(select.cart.deliveryFee);
     thisCart.dom.subtotalPrice = thisCart.dom.wrapper.querySelector(select.cart.subtotalPrice);
     thisCart.dom.totalPrice = thisCart.dom.wrapper.querySelectorAll(select.cart.totalPrice);
     thisCart.dom.totalNumber = thisCart.dom.wrapper.querySelector(select.cart.totalNumber);
     thisCart.dom.form = thisCart.dom.wrapper.querySelector(select.cart.form);
-    thisCart.dom.formSubmit = thisCart.dom.wrapper.querySelector(select.cart.formSubmit);
     thisCart.dom.phone = thisCart.dom.wrapper.querySelector(select.cart.phone);
     thisCart.dom.address = thisCart.dom.wrapper.querySelector(select.cart.address);
   }
 
-  initActions() {
+
+
+  initActions(){
     const thisCart = this;
-    thisCart.dom.toggleTrigger.addEventListener('click', function () {
+
+    const toggleBacketClass = thisCart.dom.toggleTrigger;
+
+    toggleBacketClass.addEventListener('click', function(){
       thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
     });
-    thisCart.dom.productList.addEventListener('updated', function () {
+
+    thisCart.dom.productList.addEventListener('updated', function(){
       thisCart.update();
     });
-    thisCart.dom.productList.addEventListener('remove', function (event) {
-      thisCart.remove(event.detail.cartProduct);
+
+    thisCart.dom.productList.addEventListener('remove', function(event){
+      thisCart.remove(event);
     });
-    thisCart.dom.form.addEventListener('submit', function (event) {
+
+    thisCart.dom.form.addEventListener('submit', function(event){
       event.preventDefault();
       thisCart.sendOrder();
     });
-
   }
 
-  add(menuProduct) {
+  add(menuProduct){
     const thisCart = this;
-    // console.log('adding product', menuProduct)
-    /* Generate HTML based on template */
+
+    // generate HTML based on template 
     const generatedHTML = templates.cartProduct(menuProduct);
-    /* create element using utils.createElementFromHTML */
+
+    // create element using utils.createElementFromHTML
     const generatedDOM = utils.createDOMFromHTML(generatedHTML);
-    /* add element to menu */
+
+    // add element to menu 
     thisCart.dom.productList.appendChild(generatedDOM);
-    /* Push data bout products to array */
+
+    // create new single product class in basket
     thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
-    console.log('thisCart.products', thisCart.products);
-
     thisCart.update();
-
   }
 
   update(){
     const thisCart = this;
 
-    const deliveryFee = settings.cart.defaultDeliveryFee;
+    thisCart.deliveryFee = settings.cart.defaultDeliveryFee;
     thisCart.totalNumber = 0;
     thisCart.subtotalPrice = 0;
-    thisCart.totalPrice = 0;
-
-    for(let product of thisCart.products){
-      thisCart.totalNumber += product.amount;
-      thisCart.subtotalPrice += product.price;
-    }
-
-    if (thisCart.totalNumber != 0){
-      thisCart.totalPrice = thisCart.subtotalPrice + deliveryFee;
-      thisCart.dom.deliveryFee.innerHTML = deliveryFee;
-    } else {
-      thisCart.totalPrice = 0;
-      thisCart.dom.deliveryFee.innerHTML = 0;
-    }
       
+    for(let cartProduct of thisCart.products){
+      thisCart.totalNumber = cartProduct.amount + thisCart.totalNumber; 
+      thisCart.subtotalPrice = cartProduct.price + thisCart.subtotalPrice;
+      thisCart.dom.totalNumber.innerHTML = thisCart.totalNumber;
+      thisCart.dom.subtotalPrice.innerHTML = thisCart.subtotalPrice;
+    }
+
+    if(thisCart.totalNumber === 0){
+      thisCart.totalPrice = 0;
+      thisCart.subtotalPrice = 0;
+      thisCart.deliveryFee = 0;
+    } else {
+      thisCart.totalPrice = thisCart.subtotalPrice + thisCart.deliveryFee;
+    }
+
+    thisCart.dom.deliveryFee.innerHTML = thisCart.deliveryFee;
+
+    for(let totalPrices of thisCart.dom.totalPrice){
+      totalPrices.innerHTML = thisCart.totalPrice;
+    }
+
+    thisCart.dom.deliveryFee.innerHTML = thisCart.deliveryFee;
     thisCart.dom.totalNumber.innerHTML = thisCart.totalNumber;
     thisCart.dom.subtotalPrice.innerHTML = thisCart.subtotalPrice;
-      
+    thisCart.dom.totalPrice.innerHTML = thisCart.totalPrice;
 
-    for (let price of thisCart.dom.totalPrice){
-      price.innerHTML = thisCart.totalPrice;
-    }
   }
-    
-  remove(event) {
+
+  remove(event){
     const thisCart = this;
 
+    const indexOfProductToRemove = thisCart.products.indexOf(event.detail.cartProduct);
 
-    event.dom.wrapper.remove();
-    console.log(event.dom.wrapper.remove());
-    // index of product  in array
-    const removedProduct = thisCart.products.indexOf(event);
-    // Remove product 
-    thisCart.products.splice(removedProduct, 1);
+    thisCart.products.splice(indexOfProductToRemove, 1);
 
     thisCart.update();
+
   }
 
-  sendOrder() {
+  sendOrder(){
     const thisCart = this;
+
     const url = settings.db.url + '/' + settings.db.orders;
 
     const payload = {
@@ -125,13 +128,15 @@ class Cart {
       phone: thisCart.dom.phone.value,
       totalPrice: thisCart.totalPrice,
       subtotalPrice: thisCart.subtotalPrice,
-      totalNumber: thisCart.totalNumber,
-      deliveryFee: settings.cart.defaultDeliveryFee,
+      totalNumber : thisCart.totalNumber,
+      deliveryFee: thisCart.deliveryFee,
       products: [],
-    };
-    for (let prod of thisCart.products) {
+    }; 
+
+    for(let prod of thisCart.products) {
       payload.products.push(prod.getData());
     }
+
     const options = {
       method: 'POST',
       headers: {
@@ -139,17 +144,10 @@ class Cart {
       },
       body: JSON.stringify(payload),
     };
-
+      
     fetch(url, options);
 
-    fetch(url, options)
-      .then(function (response) {
-        return response.json();
-      }).then(function (parsedResponse) {
-        console.log('parsedResponse: ', parsedResponse);
-      });
-
   }
-
 }
+
 export default Cart;

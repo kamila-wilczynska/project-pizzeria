@@ -1,7 +1,7 @@
 
-import { templates, select, classNames } from '../settings.js';
+import { templates, select,  } from '../settings.js';
 //import utils from '../utils.js';
-import AmountWidget from './AmountWidget.js';
+import AmountWidget from './amountWidget.js';
 
 class Booking {
   constructor(element) {
@@ -42,17 +42,6 @@ class Booking {
       
     });
     
-   
-
-    for (const table of thisBooking.dom.tables) {
-      table.addEventListener('click', function () {
-        for (const table of thisBooking.dom.tables) {
-          table.classList.remove(classNames.booking.active);
-        }
-        table.classList.toggle(classNames.booking.active);
-      });
-    }
-
   }
 }
 	

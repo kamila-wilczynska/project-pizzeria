@@ -1,59 +1,53 @@
-
-
 import {select} from '../settings.js';
-import AmountWidget from '../components/amountWidget.js';
+import AmountWidget from './amountWidget.js';
 
-
-
-
-
-
-
-
-class CartProduct {
-  constructor(element, menuProduct) {
-    const thisCartProduct = this;
-
-
-    thisCartProduct.name = menuProduct.name;
+class CartProduct{
+  constructor(menuProduct, element){
+      
+    const thisCartProduct = this; 
+      
     thisCartProduct.id = menuProduct.id;
+    thisCartProduct.name = menuProduct.name;
     thisCartProduct.amount = menuProduct.amount;
     thisCartProduct.priceSingle = menuProduct.priceSingle;
     thisCartProduct.price = menuProduct.price;
+    thisCartProduct.params = menuProduct.params;
 
     thisCartProduct.getElements(element);
     thisCartProduct.initAmountWidget();
     thisCartProduct.initActions();
 
-  }
-
-  getElements(element) {
-    const thisCartProduct = this;
-
-    thisCartProduct.dom = {
-      wrapper: element,
-      amountWidget: element.querySelector(select.cartProduct.amountWidget),
-      price: element.querySelector(select.cartProduct.price),
-      edit: element.querySelector(select.cartProduct.edit),
-      remove: element.querySelector(select.cartProduct.remove),
-
-    };
+    // console.log('thisCartProduct', thisCartProduct);
 
   }
 
-  initAmountWidget() {
+  getElements(element){
+    const thisCartProduct = this; 
+
+    thisCartProduct.dom = {};
+
+    thisCartProduct.dom.wrapper = element;
+    thisCartProduct.dom.amountWidget = element.querySelector(select.cartProduct.amountWidget);
+    thisCartProduct.dom.price = element.querySelector(select.cartProduct.price);
+    thisCartProduct.dom.edit = element.querySelector(select.cartProduct.edit);
+    thisCartProduct.dom.remove = element.querySelector(select.cartProduct.remove);
+
+  }
+
+  initAmountWidget(){
     const thisCartProduct = this;
 
-    thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidget);
-
-    thisCartProduct.dom.amountWidgetElem.addEventListener('updated', function () {
+    thisCartProduct.amountWidget  = new AmountWidget(thisCartProduct.dom.amountWidget);
+      
+    thisCartProduct.dom.amountWidget.addEventListener('updated', function(){
       thisCartProduct.amount = thisCartProduct.amountWidget.value;
-      thisCartProduct.price = thisCartProduct.priceSingle * thisCartProduct.amount;
+      thisCartProduct.price = thisCartProduct.amountWidget.value * thisCartProduct.priceSingle;
       thisCartProduct.dom.price.innerHTML = thisCartProduct.price;
     });
+    
   }
 
-  remove() {
+  remove(){
     const thisCartProduct = this;
 
     const event = new CustomEvent('remove', {
@@ -64,34 +58,40 @@ class CartProduct {
     });
 
     thisCartProduct.dom.wrapper.dispatchEvent(event);
-  }
-  initActions() {
-    const thisCartProduct = this;
+    thisCartProduct.dom.wrapper.remove();
 
-    thisCartProduct.dom.edit.addEventListener('click', function (event) {
-      event.preventDefault();
-    });
-    thisCartProduct.dom.remove.addEventListener('click', function (event) {
-      event.preventDefault();
-      thisCartProduct.remove();
-
-    });
   }
 
-  getData() {
+  initActions(){
     const thisCartProduct = this;
 
-    const orderedProducts = {
-      id: thisCartProduct.id,
-      amount: thisCartProduct.amount,
-      price: thisCartProduct.price,
-      priceSingle: thisCartProduct.priceSingle,
-      params: thisCartProduct.params,
-      name: thisCartProduct.name,
+    thisCartProduct.dom.edit.addEventListener('click', function(event){
+      event.preventDefault();
+    });
 
+    thisCartProduct.dom.remove.addEventListener('click', function(event){
+      event.preventDefault();
+      thisCartProduct.remove(event);
+    });
+  }
+
+  getData(){
+    const thisCartProduct = this;
+
+    const getData = {
+
+      id : thisCartProduct.id,
+      amount : thisCartProduct.amount,
+      price : thisCartProduct.price,
+      priceSingle : thisCartProduct.priceSingle,
+      name : thisCartProduct.name,
+      params : thisCartProduct.params
     };
-    return orderedProducts;
-  }
 
+    return getData;
+
+  }
+    
 }
+
 export default CartProduct;
