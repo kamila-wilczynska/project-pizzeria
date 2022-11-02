@@ -92,7 +92,7 @@ const app = {
       });
   },
 
-  initBooking: function(){
+  initBooking:function(){
     const thisApp = this;
     
     const reservationWidget = document.querySelector(select.containerOf.booking);

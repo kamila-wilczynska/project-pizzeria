@@ -67,7 +67,7 @@ utils.hourToNumber = function(hour){
   
   return parseInt(parts[0]) + parseInt(parts[1])/60;
 };
-  
+// formatowanie daty rok-miesiąc-dzień
 utils.dateToStr = function(dateObj){
   return dateObj.toISOString().slice(0, 10);
 };
