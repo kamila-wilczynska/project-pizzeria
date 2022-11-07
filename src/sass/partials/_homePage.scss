@@ -1,5 +1,4 @@
-.home-wrapper {
-	
+home-wrapper {	
   margin: ($base-size * 3.5) auto;
   padding: ($base-size * 6) ($base-size * 4);
   background: $color-light;
@@ -9,6 +8,18 @@
 
 .home-links {
   font-size: 12px;
+  color: black;
 
 }
+
+.carousel-cell-image {
+	display: block;
+	max-height: 100%;
+	margin: 0 auto;
+	max-width: 100%;
+	opacity: 0;
+	-webkit-transition: opacity 0.4s;
+			transition: opacity 0.4s;
+  }
+
 	
