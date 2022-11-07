@@ -7,6 +7,7 @@ export const select = {
     menuProduct: '#template-menu-product',
     cartProduct: '#template-cart-product',
     bookingWidget: '#template-booking-widget',
+    homePage: '#template-home-widget',
   },
   containerOf: {
     menu: '#product-list',
@@ -68,6 +69,7 @@ export const select = {
     hoursAmount: '.hours-amount',
     tables: '.floor-plan .table',
     submitButton: '.order-confirmation button',
+    floorPlan: '.floor-plan',
   },
   nav: {
     links: '.main-nav a',
@@ -86,6 +88,7 @@ export const classNames = {
     active: 'active',
     loading: 'loading',
     tableBooked: 'booked',
+    tableSelected: 'selected',
   },
   nav: {
     active: 'active',
@@ -118,9 +121,9 @@ export const settings = {
   db: {
     url: '//localhost:3131',
     products: 'products',
-    order: 'order',
-    booking: 'booking',
-    event: 'event',
+    orders: 'orders',
+    bookings: 'bookings',
+    events: 'events',
     dateStartParamKey: 'date_gte',
     dateEndParamKey: 'date_lte',
     notRepeatParam: 'repeat=false',
@@ -132,6 +135,7 @@ export const templates = {
   menuProduct: Handlebars.compile(document.querySelector(select.templateOf.menuProduct).innerHTML),
   cartProduct: Handlebars.compile(document.querySelector(select.templateOf.cartProduct).innerHTML),
   bookingWidget: Handlebars.compile(document.querySelector(select.templateOf.bookingWidget).innerHTML),
+  homePage: Handlebars.compile(document.querySelector(select.templateOf.homePage).innerHTML),
 	
 	
 };
