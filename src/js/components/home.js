@@ -6,6 +6,7 @@ class Home {
     const thisHome = this;
 
     thisHome.render(element);
+    thisHome. initCarousel();
     
 
 
@@ -15,7 +16,7 @@ class Home {
   render(element) {
     const thisHome = this;
 
-    const generatedHTML = templates.homePageWidget(thisHome.data);
+    const generatedHTML = templates.homePageWidget;
 
     thisHome.dom = [];
     thisHome.dom.wrapper = element;
@@ -35,6 +36,7 @@ class Home {
     console.log(flkty);
 
   }
+  
 }
 
 

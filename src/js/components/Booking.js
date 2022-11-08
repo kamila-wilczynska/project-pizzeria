@@ -211,6 +211,7 @@ class Booking {
     thisBooking.dom.hourPicker = thisBooking.dom.wrapper.querySelector(select.widgets.hourPicker.wrapper);
     thisBooking.dom.tables = thisBooking.dom.wrapper.querySelectorAll(select.booking.tables);
     thisBooking.dom.floorPlan = thisBooking.dom.wrapper.querySelector(select.booking.floorPlan);
+    thisBooking.dom.starter = thisBooking.dom.wrapper.querySelector(select.booking.starters);
   }
 
   initWidgets(){
@@ -238,7 +239,7 @@ class Booking {
 	
   }
 
-  Starter(){
+  Starter(event){
     const thisBooking = this;
 
     thisBooking.dom.starter.addEventListener('click', function(){

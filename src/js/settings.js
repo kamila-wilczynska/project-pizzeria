@@ -15,7 +15,7 @@ export const select = {
     pages: '#pages',
     homeLink: '#home',
     booking: '.booking-wrapper',
-    home: 'home-wrapper',
+    home: '.home-wrapper',
     orderLink: '.main-info__order',
     bookingLink: '.main-info__book'
   },
@@ -72,6 +72,9 @@ export const select = {
     tables: '.floor-plan .table',
     submitButton: '.order-confirmation button',
     floorPlan: '.floor-plan',
+    starters: '.booking-form [name=starter]',
+    address: '.booking-form [name="address"]',
+    phone: '.booking-form [name="phone"]',
   },
   nav: {
     links: '.main-nav a',

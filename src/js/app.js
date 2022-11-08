@@ -54,6 +54,12 @@ const app = {
     }
   },
 
+  initHome: function(){
+    const thisApp = this;
+    const homeWidget = document.querySelector(select.containerOf.home);
+    thisApp.home = new Home(homeWidget);
+  },
+
   initCart: function(){
     const thisApp = this;
 
@@ -94,11 +100,7 @@ const app = {
 
       });
   },
-  initHome: function(){
-    const thisApp = this;
-    const homeWidget = document.querySelector(select.containerOf.home);
-    thisApp.home = new Home(homeWidget);
-  },
+ 
   initBooking:function(){
     const thisApp = this;
     
@@ -115,10 +117,11 @@ const app = {
     //console.log('settings:', settings);
     //console.log('templates:', templates);
     thisApp.initPages();
+    thisApp.initHome();
     thisApp.initData();
     thisApp.initCart();
     thisApp.initBooking();
-    thisApp.initHome();
+    
   },
 };
 
